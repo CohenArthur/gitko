@@ -1,0 +1,3 @@
+[submodule "oslib"]
+	path = oslib
+	url = https://github.com/cohenarthur/oslib-jk

@@ -1,45 +1,55 @@
-incl low_level;
+incl libgit_wrapper;
 
-type Git;
-
-// FIXME: Return Result[] instead
-func clone(g: Git, url: string, path: string) {
-    if jinko_git_clone(url) != 0 {
-        println_err("couldn't clone repository {url} at path {path}"); // ": {jinko_git_get_error}");
+// FIXME: This should return a Result
+func gitko_init() -> bool {
+    libgit_init_error_code = git_libgit2_init();
+    if libgit_init_error_code >= 0 {
+        true
+    } else {
+        println_err(jinko_git_get_error());
+        false
     }
 }
 
-# test clone_jinko()
-{
-    Git.clone("https://github.com/jinko-core/jinko", "/tmp/not-jinko")
+type Local;
+type Remote;
+
+// FIXME: Replace all `strings` with `Maybe[String]` for builder pattern
+// FIXME: Add kind: Local | Remote
+type Git(url: string, local_path: string);
+
+// FIXME: Return Result instead
+func __inner_clone(git: Git) -> bool {
+    if jinko_git_clone(git.url, git.local_path) != 0 {
+        println_err("couldn't clone repository {git.url} to {git.local_path}: {jinko_git_get_error()}");
+        false
+    } else {
+        true
+    }
 }
 
-# incl oslib;
-# 
-# type Git(path: string);
-# type CheckoutPath(raw_value: string);
-# 
-# // FIXME: Add checks that the branch exists
-# func branch(b_name: string) -> CheckoutPath {
-#     CheckoutPath(raw_value: b_name)
-# }
-# 
-# // FIXME: Add checks that the tag exists
-# func tag(tag: string) -> CheckoutPath {
-#     CheckoutPath(raw_value: tag)
-# }
-# 
-# // FIXME: Add checks that the commit exists
-# func commit(hash: string) -> CheckoutPath {
-#     CheckoutPath(raw_value: hash)
-# }
-# 
-# // FIXME: This should really return a Result instead
-# func checkout(git: Git, target: CheckoutPath) -> bool {
-#     cmd = cmd("git").with_arg("checkout").with_arg(target.raw_value);
-#     if cmd.execute() == 0 {
-#         true
-#     } else {
-#         false
-#     }
-# }
+// FIXME: Return Result[] instead
+func clone(repo: Git) -> bool {
+    if repo.local_path.is_empty().not() {
+        repo.__inner_clone()
+    } else {
+        // FIXME: Use future logging library
+        println_err("cannot clone library to empty local path");
+        false
+    }
+}
+
+func repository(url: string) -> Git {
+    Git(url: url, local_path: "")
+}
+
+func to_path(git: Git, path: string) -> Git {
+    Git(url: git.url, local_path: path)
+}
+
+// FIXME: We should think about a better way to make runtime errors... And it
+// should be included in the standard library.
+// Something like Log.err() which would display stuff in red
+if gitko_init().not() {
+    println_err("couldn't initialize gitko library");
+}

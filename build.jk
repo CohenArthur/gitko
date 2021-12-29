@@ -13,6 +13,8 @@ func compile_wrapper() {
 	shell("make -C {wrapper_dir}");
 }
 
+compile_wrapper();
+
 test compile_wrapper_test() {
 	shell("rm {wrapper_lib}");
 	compile_wrapper();

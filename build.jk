@@ -1,0 +1,21 @@
+# package("oslib").version("0.0.1")
+
+incl oslib
+
+wrapper = "libgit-jinko-wrapper";
+wrapper_dir = "lib/{wrapper}";
+wrapper_lib = "{wrapper_dir}/lib.so";
+
+// FIXME: Check if lib exists first
+// FIXME: This should be done in a build.jk file
+// Link with the C wrapper library
+func compile_wrapper() {
+	shell("make -C {wrapper_dir}");
+}
+
+test compile_wrapper_test() {
+	shell("rm {wrapper_lib}");
+	compile_wrapper();
+
+	// FIXME: Assert that {wrapper_so} exists and is a lib
+}

@@ -1,2 +1,6 @@
 # Ignore tags
 tags
+
+# Ignore libgit wrapper build files
+lib/libgit-jinko-wrapper/*.so
+lib/libgit-jinko-wrapper/*.o

@@ -4,6 +4,7 @@ link_with("lib/libgit-jinko-wrapper/lib.so");
 
 ext func jinko_git_init();
 ext func jinko_git_get_error() -> string;
+ext func jinko_git_compute_local_path(url: string) -> string;
 ext func jinko_git_clone(url: string) -> int;
 
 jinko_git_init();

@@ -1,0 +1,16 @@
+incl oslib
+
+// FIXME: Check if lib exists first
+// FIXME: This should be done in a build.jk file
+// Link with the C wrapper library
+func link_wrapper() {
+	shell("make -C lib/libgit-jinko-wrapper");
+	link_with("lib/libgit-jinko-wrapper/lib.so");
+}
+
+ext func jinko_git_init();
+ext func jinko_git_get_error() -> string;
+ext func jinko_git_clone(url: string) -> int;
+
+link_wrapper();
+jinko_git_init();

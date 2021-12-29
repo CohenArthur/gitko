@@ -1,29 +1,45 @@
-incl oslib;
+incl low_level;
 
-type Git(path: string);
-type CheckoutPath(raw_value: string);
+type Git;
 
-// FIXME: Add checks that the branch exists
-func branch(b_name: string) -> CheckoutPath {
-    CheckoutPath(raw_value: b_name)
-}
-
-// FIXME: Add checks that the tag exists
-func tag(tag: string) -> CheckoutPath {
-    CheckoutPath(raw_value: tag)
-}
-
-// FIXME: Add checks that the commit exists
-func commit(hash: string) -> CheckoutPath {
-    CheckoutPath(raw_value: hash)
-}
-
-// FIXME: This should really return a Result instead
-func checkout(git: Git, target: CheckoutPath) -> bool {
-    cmd = cmd("git").with_arg("checkout").with_arg(target.raw_value);
-    if cmd.execute() == 0 {
-        true
-    } else {
-        false
+// FIXME: Return Result[] instead
+func clone(g: Git, url: string, path: string) {
+    if jinko_git_clone(url) != 0 {
+        println_err("couldn't clone repository {url} at path {path}"); // ": {jinko_git_get_error}");
     }
 }
+
+# test clone_jinko()
+{
+    Git.clone("https://github.com/jinko-core/jinko", "/tmp/not-jinko")
+}
+
+# incl oslib;
+# 
+# type Git(path: string);
+# type CheckoutPath(raw_value: string);
+# 
+# // FIXME: Add checks that the branch exists
+# func branch(b_name: string) -> CheckoutPath {
+#     CheckoutPath(raw_value: b_name)
+# }
+# 
+# // FIXME: Add checks that the tag exists
+# func tag(tag: string) -> CheckoutPath {
+#     CheckoutPath(raw_value: tag)
+# }
+# 
+# // FIXME: Add checks that the commit exists
+# func commit(hash: string) -> CheckoutPath {
+#     CheckoutPath(raw_value: hash)
+# }
+# 
+# // FIXME: This should really return a Result instead
+# func checkout(git: Git, target: CheckoutPath) -> bool {
+#     cmd = cmd("git").with_arg("checkout").with_arg(target.raw_value);
+#     if cmd.execute() == 0 {
+#         true
+#     } else {
+#         false
+#     }
+# }

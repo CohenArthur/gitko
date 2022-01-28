@@ -1,0 +1,4 @@
+incl gitko
+
+gitko = repository("https://github.com/jinko-core/gitko").to_path("tests/new-gitko");
+gitko.clone()

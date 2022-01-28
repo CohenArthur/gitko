@@ -1,0 +1,38 @@
+tests:
+  - name: "Assert gitko isn't here"
+    binary: "ls"
+    args:
+      - "tests/new-gitko"
+    exit_code: 2
+
+  # Split this in two since we can't copy . into itself
+  - name: "Setup environment (1)"
+    binary: "cp"
+    args:
+      - "-r"
+      - "."
+      - "/tmp/gitko"
+    exit_code: 0
+
+  - name: "Setup environment (2)"
+    binary: "mv"
+    args:
+      - "/tmp/gitko"
+      - "tests/gitko"
+
+  - name: "Clone gitko using gitko"
+    binary: "jinko"
+    args:
+      - "tests/clone-gitko.jk"
+
+  - name: "Assert gitko is here"
+    binary: "ls"
+    args:
+      - "tests/new-gitko"
+
+  - name: "Cleanup"
+    binary: "rm"
+    args:
+      - "-rf"
+      - "tests/new-gitko"
+      - "tests/gitko"

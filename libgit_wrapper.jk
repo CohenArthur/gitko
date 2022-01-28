@@ -1,0 +1,7 @@
+incl oslib
+
+link_with("lib/libgit-jinko-wrapper/lib.so");
+
+ext func git_libgit2_init() -> int;
+ext func jinko_git_get_error() -> string;
+ext func jinko_git_clone(url: string, destination_path: string) -> int;
